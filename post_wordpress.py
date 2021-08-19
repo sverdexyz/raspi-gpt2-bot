@@ -1,8 +1,6 @@
 import sys
 from gpt2_client import GPT2Client
 
-#Note 774 or 1558 does NOT fit into Raspberry Pi RAM
-gpt2 = GPT2Client('345M') # This could also be `345M`, `774M`, or `1558M`
 
 from wordpress_xmlrpc import Client
 from wordpress_xmlrpc.methods import posts
@@ -27,9 +25,14 @@ if __name__ == "__main__":
     """
     Run GPT2 with an input text, capture output and post it to blog
     """
-    title = ' '.join(sys.argv[3:])
+    title = ' '.join(sys.argv[4:])
     print(title)
+
+
+    #Note 774 or 1558 does NOT fit into Raspberry Pi RAM                                 
+    gpt2 = GPT2Client('345M') # This could also be `345M`, `774M`, or `1558M`      
+    gpt2.load_model(force_download=False) # Use cached versions if available.  
     gpt2_text =  gpt2.generate_batch_from_prompts(
-        prompts) # returns an array of generated text
-    print(gpt2_text)
+        [title]) # returns an array of generated text
+    print(gpt2_text[0])
     post_entry(title,gpt2_text)
