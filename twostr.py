@@ -39,7 +39,7 @@ def post_nostr(message, private_key):
     #private_key = generate_private_key()
     public_key = get_public_key(private_key)
 
-    event = Event(public_key, MESSAGE)
+    event = Event(public_key, message)
     event.sign(private_key)
 
     message = json.dumps([ClientMessageType.EVENT, event.to_json_object()])
@@ -54,10 +54,10 @@ if __name__ == "__main__":
     print(tw_auth)
     
     #Tweet Twitter
-    tw_auth.update_status(MESSAGE)
+    tw_auth.update_status(sys.argv[3])
 
     #Authenticate Nostr
     keys = auth_nostr(sys.argv[2])
         
     #Tweet Nostr
-    post_nostr(MESSAGE, keys['private'])
+    post_nostr(sys.argv[3], keys['private'])
