@@ -5,6 +5,8 @@ import json
 import time
 import numpy as np
 
+from twitter_auth import authenticate
+
 from gpt2_client import GPT2Client
 gpt2 = GPT2Client('345M') # This could also be `345M`, `774M`, or `1558M`                 
 
@@ -31,23 +33,6 @@ This is the essence of the universe, the essence of everything, the essence of e
 This
 """
 
-
-def authenticate(creds_file):
-    """
-    Authenticate using creds file
-    """
-    with open(creds_file,'r') as f:
-        keys = json.load(f)
-    
-    CONSUMER_KEY = keys['CONSUMER_KEY']
-    CONSUMER_SECRET = keys['CONSUMER_SECRET']
-    ACCESS_TOKEN = keys['ACCESS_TOKEN']
-    ACCESS_TOKEN_SECRET = keys['ACCESS_TOKEN_SECRET']
-    
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-    api = tweepy.API(auth)
-    return api
 
 USA_GEO_CODE=23424977
 
