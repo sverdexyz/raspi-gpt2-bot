@@ -14,8 +14,8 @@ from nostr.nostr.key import generate_private_key, get_public_key
 
 
 MESSAGE = """Hello Twitter and Hello Nostr.
-https://twitter.com/manfromcastle
-https://astral.ninja/f43c1f9bff677b8f27b602725ea0ad51af221344f69a6b352a74991a4479bac3
+https://twitter.com/SOMEONE
+https://astral.ninja/SOMEONE2
 """
 
 def auth_nostr(creds_file):
