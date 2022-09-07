@@ -13,11 +13,6 @@ from nostr.nostr.message_type import ClientMessageType
 from nostr.nostr.key import generate_private_key, get_public_key
 
 
-MESSAGE = """Hello Twitter and Hello Nostr.
-https://twitter.com/SOMEONE
-https://astral.ninja/SOMEONE2
-"""
-
 def auth_nostr(creds_file):
     """
     return nostr private key from credentials file
@@ -32,14 +27,20 @@ def post_nostr(message, private_key):
     """
     relay_manager = RelayManager()
     relay_manager.add_relay("wss://nostr-pub.wellorder.net")
+    relay_manager.add_relay("wss://nostr-relay.untethr.me")
+    relay_manager.add_relay("wss://nostr-relay.wlvs.space")
+    relay_manager.add_relay("wss://nostr.oxtr.dev")
+    relay_manager.add_relay("wss://nostr-pub.semisol.dev")
+    relay_manager.add_relay("wss://nostr.ono.re")
     relay_manager.add_relay("wss://relay.damus.io")
+    relay_manager.add_relay("wss://relay.futohq.com")
     relay_manager.open_connections({"cert_reqs": ssl.CERT_NONE}) # NOTE: This disables ssl certificate verification
     time.sleep(1.25) # allow the connections to open
     
     #private_key = generate_private_key()
     public_key = get_public_key(private_key)
 
-    event = Event(public_key, MESSAGE)
+    event = Event(public_key, message)
     event.sign(private_key)
 
     message = json.dumps([ClientMessageType.EVENT, event.to_json_object()])
@@ -51,13 +52,15 @@ def post_nostr(message, private_key):
 if __name__ == "__main__":
     #Authenticate Twitter
     tw_auth = authenticate(sys.argv[1])
-    print(tw_auth)
     
     #Tweet Twitter
-    tw_auth.update_status(MESSAGE)
-
+    status = tw_auth.update_status(sys.argv[3])
+    print(status)
+    tweet_id = "https://twitter.com/"+status.user.screen_name+"/statuses/"+str(status.id)
+    print(tweet_id)
+    
     #Authenticate Nostr
     keys = auth_nostr(sys.argv[2])
         
     #Tweet Nostr
-    post_nostr(MESSAGE, keys['private'])
+    post_nostr(sys.argv[3]+" "+tweet_id, keys['private'])
