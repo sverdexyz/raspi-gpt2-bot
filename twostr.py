@@ -27,6 +27,11 @@ def post_nostr(message, private_key):
     """
     relay_manager = RelayManager()
     relay_manager.add_relay("wss://nostr-pub.wellorder.net")
+    relay_manager.add_relay("wss://nostr-relay.untethr.me")
+    relay_manager.add_relay("wss://nostr-relay.wlvs.space")
+    relay_manager.add_relay("wss://nostr.oxtr.dev")
+    relay_manager.add_relay("wss://nostr-pub.semisol.dev")
+    relay_manager.add_relay("wss://nostr.ono.re")
     relay_manager.add_relay("wss://relay.damus.io")
     relay_manager.add_relay("wss://relay.futohq.com")
     relay_manager.open_connections({"cert_reqs": ssl.CERT_NONE}) # NOTE: This disables ssl certificate verification
