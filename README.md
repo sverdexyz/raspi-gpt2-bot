@@ -18,3 +18,14 @@ https://developer.twitter.com/en/portal/products/elevated
 - Twitter support is experimental and running it live using prod credentials will
   likely result in suspension of your Twitter API write priviliges. Tweet less often.
 
+#Posting to Twitter and Nostr
+Fill in the provided Nostr and Twitter credentials. For Twitter you need "Elevated" Write-enabled
+developer API keys and you need to apply for them and give reasons.
+
+https://developer.twitter.com/en
+
+Once you have credentials post as follows:
+
+```
+python3.9 twostr twitter.json nostr.json "This is my first EVER tweet posted to Twitter and Nostr"
+```
