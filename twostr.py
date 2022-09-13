@@ -3,16 +3,33 @@ Post a tweet to the Twitter and Nostr pipelines
 Requires Twitter Developer API credentials as well as
 Nostr Private key to an account
 """
-import sys, json, ssl
+import sys, json, ssl, os
 from twitter_auth import authenticate
 
 import time
+import requests
 from nostr.nostr.event import Event
 from nostr.nostr.relay_manager import RelayManager
 from nostr.nostr.message_type import ClientMessageType
 from nostr.nostr.key import generate_private_key, get_public_key
 
+def tweet_image(api, url, message):
+    """
+    Add image to a tweet.
+    """
+    filename = 'temp.jpg'
+    request = requests.get(url, stream=True)
+    if request.status_code == 200:
+        with open(filename, 'wb') as image:
+            for chunk in request:
+                image.write(chunk)
 
+        status = api.update_with_media(filename, status=message)
+        os.remove(filename)
+    else:
+        print("Unable to download image")
+    return status
+        
 def auth_nostr(creds_file):
     """
     return nostr private key from credentials file
@@ -54,7 +71,11 @@ if __name__ == "__main__":
     tw_auth = authenticate(sys.argv[1])
     
     #Tweet Twitter
-    status = tw_auth.update_status(sys.argv[3])
+    #If optional image link is provided Tweet with an image
+    if sys.argv[4]:
+        status = tweet_image(tw_auth,sys.argv[4],sys.argv[3])
+    else:
+        status = tw_auth.update_status(sys.argv[3])
     print(status)
     tweet_id = "https://twitter.com/"+status.user.screen_name+"/statuses/"+str(status.id)
     print(tweet_id)
