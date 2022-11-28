@@ -12,6 +12,7 @@ https://developer.twitter.com/en/portal/products/elevated
 ## Install on Raspberry 4
 - Recommended to be ONLY run on a Raspberry Pi as the old version of Tensorflow
   is very insecure
+- Choose 32bit Raspberry Lite version, NOT 64 bit at this point
 - 4GB RAM should be enough for the 345M model
 - ONLY Tensorflow 1.1.13 works on Rapsberry Pi, use AT YOUR OWN RISK,
   as such an old Tensorflow introduces a miriad security vulerabilities.

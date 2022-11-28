@@ -6,6 +6,7 @@ import time
 import numpy as np
 
 from twitter_auth import authenticate
+from itertools import cycle
 
 from gpt2_client import GPT2Client
 gpt2 = GPT2Client('345M') # This could also be `345M`, `774M`, or `1558M`                 
@@ -73,6 +74,24 @@ def home_timeline(api, retweet_cnt=10):
              #   print("Failed reply to %s- %s" %
              #         (tweet.author.screen_name,tweet.text))
 
+def reply_indefinitely_to_users(api,filename):
+    """
+    Cycle through a list of Twitter usernames and reply to their last tweet, indefinitely
+    """
+    file1 = open(username, 'r')
+    userlist = file1.readlines()
+    for user in cycle(userlist):
+        print(user)
+        get_last_tweet_and_reply(api,username)
+
+def get_last_tweet_and_reply(api,username):
+    """
+    Get last tweet for a specific user and reply
+    """
+    tweet = api.user_timeline(id = username, count = 1)[0]
+    print(tweet.text)
+    reply_to_specific_tweet(api,username,tweet.tweetId, tweet.text)
+
 def get_clean_tweet(generated_text):
     """
     Split GPT2 outputs on separator and look for short tweets
@@ -135,15 +154,11 @@ def reply_tweet(api,twt, t):
                 time.sleep(10)
                 
 if __name__ == "__main__":
+    """
+    Grab a list of usernames and cycle through it and reply to latest tweets of users
+    python3 twitter_post.py twitter.json alex_friends.txt
+    """
     auth = authenticate(sys.argv[1])
 
-    #Get home timeline tweets
-    home_timeline(auth)
-    #respond to all home timeline tweets
-    
-
-    get_trends(auth)
-
-    #try replying
-    tweets, t = find_tweets(auth)
-    #reply_tweet(auth,tweets, t)
+    #Cycle through a list of users and keep replying forever and ever
+    reply_indefinitely_to_users(api,sys.argv[2])
