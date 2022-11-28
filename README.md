@@ -19,6 +19,73 @@ https://developer.twitter.com/en/portal/products/elevated
 - Twitter support is experimental and running it live using prod credentials will
   likely result in suspension of your Twitter API write priviliges. Tweet less often.
 
+## Python and Tensorflow
+- https://www.alauda.ro/2019/01/how-to-install-python-3-7-on-raspberry-pi/
+### Python 3.5
+```
+sudo apt-get autoremove python*
+```
+Ensure system is up to date:
+```
+sudo apt-get update
+```
+Install the dependencies needed for building the distribution:
+
+    build-essential
+    tk-dev
+    libncurses5-dev
+    libncursesw5-dev
+    libreadline6-dev
+    libdb5.3-dev
+    libgdbm-dev
+    libsqlite3-dev
+    libssl-dev
+    libbz2-dev
+    libexpat1-dev
+    liblzma-dev
+    zlib1g-dev
+    libffi-dev
+```
+sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libffi-dev
+```
+Get the python src distribution:
+```
+wget https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tar.xz
+tar xf Python-3.5.0.tar.xz
+cd Python-3.5.0
+```
+Configure and compile (this might take an awful lot of time, depdning on your Raspberry’s performances):
+```
+./configure -prefix=/usr/local/opt/python-3.5.0
+make -j 4
+```
+Install:
+
+```
+sudo make altinstall
+```
+
+```
+sudo ln -s /usr/local/opt/python-3.5.0/bin/pydoc3.5 /usr/bin/pydoc3.5
+sudo ln -s /usr/local/opt/python-3.5.0/bin/python3.5 /usr/bin/python3.5
+sudo ln -s /usr/local/opt/python-3.5.0/bin/python3.5m /usr/bin/python3.5m
+sudo ln -s /usr/local/opt/python-3.5.0/bin/pyvenv-3.5 /usr/bin/pyvenv-3.5
+sudo ln -s /usr/local/opt/python-3.5.0/bin/pip3.5 /usr/bin/pip3.5
+alias python='/usr/bin/python3.5'
+alias python3=’/usr/bin/python3.5′
+ls /usr/bin/python*
+cd ..
+sudo rm -r Python-3.5.0
+rm Python-3.5.0.tar.xz
+. ~/.bashrc
+
+python -V
+```
+### Tensorflow
+- https://www.teknotut.com/en/install-tensorflow-and-keras-on-the-raspberry-pi/
+
+
+
 ## Posting to Twitter and Nostr
 Fill in the provided Nostr and Twitter credentials. For Twitter you need "Elevated" Write-enabled
 developer API keys and you need to apply for them and give reasons.
