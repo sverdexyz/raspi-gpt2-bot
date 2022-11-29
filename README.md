@@ -21,70 +21,47 @@ https://developer.twitter.com/en/portal/products/elevated
 
 ## Python and Tensorflow
 - https://www.alauda.ro/2019/01/how-to-install-python-3-7-on-raspberry-pi/
-### Python 3.5
+- https://www.yeti.co/blog/setting-up-a-raspberry-pi-with-raspbian-and-pyenv-running-python-35
+- https://stackoverflow.com/questions/39371772/how-to-install-anaconda-on-raspberry-pi-3-model-b
+- https://towardsdatascience.com/3-ways-to-install-tensorflow-2-on-raspberry-pi-fe1fa2da9104?gi=1247108a5f5c
+- https://github.com/microsoft/CameraTraps/issues/232
+### Conda
 ```
-sudo apt-get autoremove python*
-```
-Ensure system is up to date:
-```
-sudo apt-get update
-```
-Install the dependencies needed for building the distribution:
+wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-armv7l.sh
+/bin/bash Miniconda3-latest-Linux-armv7l.sh
+ source ~/.bashrc
+## Install our specific version fo tensorflow
+conda config --add channels rpi
+ conda install python=3.5
+ conda install python=3.6
+conda create --name tensorflow-twitter python=3.5 jupyter -y
+ conda install --name tensorflow-twitter tensorflow=1.13.1
+ conda config --append channels conda-forge
+ ```
 
-    build-essential
-    tk-dev
-    libncurses5-dev
-    libncursesw5-dev
-    libreadline6-dev
-    libdb5.3-dev
-    libgdbm-dev
-    libsqlite3-dev
-    libssl-dev
-    libbz2-dev
-    libexpat1-dev
-    liblzma-dev
-    zlib1g-dev
-    libffi-dev
+### Compile tensorflow via Bazel
 ```
-sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libffi-dev
+git clone https://github.com/koenvervloesem/bazel-on-arm.git
+cd bazel-on-arm/
+sudo make requirements
+#old version of tensorflow requires old bazel version
+./scripts/build_bazel.sh 0.21.0
+sudo make install
+ bazel version
 ```
-Get the python src distribution:
+And finally compile tensorflow version 1.13.1
+https://www.tensorflow.org/lite/guide/build_arm
+https://github.com/tensorflow/build/tree/master/raspberry_pi_builds
 ```
-wget https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tar.xz
-tar xf Python-3.5.0.tar.xz
-cd Python-3.5.0
+git clone https://github.com/tensorflow/tensorflow.git tensorflow_src
+cd tensorflow_src/
+git checkout v1.13.1
+sudo tensorflow/tools/ci_build/ci_build.sh PI-PYTHON3 tensorflow/tools/ci_build/pi/build_raspberry_pi.sh 
 ```
-Configure and compile (this might take an awful lot of time, depdning on your Raspberry’s performances):
+## Twitter posting
 ```
-./configure -prefix=/usr/local/opt/python-3.5.0
-make -j 4
+python3.5 twitter_post.py twitter.json alex_friends.txt
 ```
-Install:
-
-```
-sudo make altinstall
-```
-
-```
-sudo ln -s /usr/local/opt/python-3.5.0/bin/pydoc3.5 /usr/bin/pydoc3.5
-sudo ln -s /usr/local/opt/python-3.5.0/bin/python3.5 /usr/bin/python3.5
-sudo ln -s /usr/local/opt/python-3.5.0/bin/python3.5m /usr/bin/python3.5m
-sudo ln -s /usr/local/opt/python-3.5.0/bin/pyvenv-3.5 /usr/bin/pyvenv-3.5
-sudo ln -s /usr/local/opt/python-3.5.0/bin/pip3.5 /usr/bin/pip3.5
-alias python='/usr/bin/python3.5'
-alias python3=’/usr/bin/python3.5′
-ls /usr/bin/python*
-cd ..
-sudo rm -r Python-3.5.0
-rm Python-3.5.0.tar.xz
-. ~/.bashrc
-
-python -V
-```
-### Tensorflow
-- https://www.teknotut.com/en/install-tensorflow-and-keras-on-the-raspberry-pi/
-
-
 
 ## Posting to Twitter and Nostr
 Fill in the provided Nostr and Twitter credentials. For Twitter you need "Elevated" Write-enabled
