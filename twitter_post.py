@@ -78,11 +78,11 @@ def reply_indefinitely_to_users(api,filename):
     """
     Cycle through a list of Twitter usernames and reply to their last tweet, indefinitely
     """
-    file1 = open(username, 'r')
+    file1 = open(filename, 'r')
     userlist = file1.readlines()
     for user in cycle(userlist):
         print(user)
-        get_last_tweet_and_reply(api,username)
+        get_last_tweet_and_reply(api,user)
 
 def get_last_tweet_and_reply(api,username):
     """

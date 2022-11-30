@@ -63,7 +63,7 @@ pip install gpt2-client
 ```
 ## Twitter posting
 ```
-python3.5 twitter_post.py twitter.json alex_friends.txt
+python3.6 twitter_post.py twitter.json alex_friends.txt
 ```
 
 ## Posting to Twitter and Nostr
