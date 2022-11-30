@@ -117,9 +117,9 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     #update_status is live tweeting, do it too often or
     #tag famous people and you gonna get shutdown
     #WARNING
-    #api.update_status("@%s %s" % (username, get_clean_tweet(reply)),
-    #                  in_reply_to_status_id=tweetId,
-    #                  auto_populate_reply_metadata=True)
+    api.update_status("@%s %s" % (username, get_clean_tweet(reply)),
+                      in_reply_to_status_id=tweetId,
+                      auto_populate_reply_metadata=True)
         
 def find_tweets(api):
     """
