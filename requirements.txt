@@ -4,3 +4,5 @@ requests==2.21.0
 tqdm==4.31.1
 gpt2-client==2.1.5
 requests==2.27.1
+tweepy=3.7.0
+protobuf==3.7.0

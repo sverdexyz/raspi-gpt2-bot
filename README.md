@@ -34,29 +34,32 @@ wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-armv7l.sh
 conda config --add channels rpi
  conda install python=3.5
  conda install python=3.6
-conda create --name tensorflow-twitter python=3.5 jupyter -y
- conda install --name tensorflow-twitter tensorflow=1.13.1
- conda config --append channels conda-forge
  ```
 
-### Compile tensorflow via Bazel
+### Get tensorflow
+Get old tensorflow from among these libraries, depending on your python version
+https://www.piwheels.org/simple/tensorflow/
+
+
+
 ```
-git clone https://github.com/koenvervloesem/bazel-on-arm.git
-cd bazel-on-arm/
-sudo make requirements
-#old version of tensorflow requires old bazel version
-./scripts/build_bazel.sh 0.21.0
-sudo make install
- bazel version
-```
-And finally compile tensorflow version 1.13.1
-https://www.tensorflow.org/lite/guide/build_arm
-https://github.com/tensorflow/build/tree/master/raspberry_pi_builds
-```
-git clone https://github.com/tensorflow/tensorflow.git tensorflow_src
-cd tensorflow_src/
-git checkout v1.13.1
-sudo tensorflow/tools/ci_build/ci_build.sh PI-PYTHON3 tensorflow/tools/ci_build/pi/build_raspberry_pi.sh 
+sudo apt-get install gcc python3-dev musl-dev g++
+conda create --name wheel python=3.5 jupyter tweepy -y
+conda install --name wheel numpy
+conda activate wheel
+wget https://www.piwheels.org/simple/tensorflow/tensorflow-1.14.0-cp35-none-linux_armv7l.whl#sha256=cba22b6d9a3e7a92c07e142bd5256c9773fd20c18090cb1d222357d3b3028655
+ pip3.6 install  tensorflow-1.14.0-cp36-none-linux_armv7l.whl 
+ conda install tweepy=3.7.0
+
+
+#update setuptools and grpcio as it causes trouble
+pip3 install --upgrade pip
+python3 -m pip install --upgrade setuptools
+
+
+pip3 install --no-cache-dir  --force-reinstall -Iv grpcio==1.24.0 tweepy==3.7.0
+pip3 install --no-cache-dir  --force-reinstall -Iv  keras_applications
+pip install gpt2-client
 ```
 ## Twitter posting
 ```

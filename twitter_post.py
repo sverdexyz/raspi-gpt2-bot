@@ -161,4 +161,4 @@ if __name__ == "__main__":
     auth = authenticate(sys.argv[1])
 
     #Cycle through a list of users and keep replying forever and ever
-    reply_indefinitely_to_users(api,sys.argv[2])
+    reply_indefinitely_to_users(auth,sys.argv[2])
