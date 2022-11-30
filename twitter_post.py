@@ -90,7 +90,7 @@ def get_last_tweet_and_reply(api,username):
     """
     tweet = api.user_timeline(id = username, count = 1)[0]
     print(tweet.text)
-    reply_to_specific_tweet(api,username,tweet.tweetId, tweet.text)
+    reply_to_specific_tweet(api,username,tweet.id, tweet.text)
 
 def get_clean_tweet(generated_text):
     """
