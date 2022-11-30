@@ -4,6 +4,7 @@ import sys
 import json
 import time
 import numpy as np
+import datetime
 
 from twitter_auth import authenticate
 from itertools import cycle
@@ -101,8 +102,8 @@ def get_clean_tweet(generated_text):
     
     # Filter out all examples which are longer than 140 characters
     valid_tweets = [x for x in split_text
-                    if (len(x) <= 140) and (len(x) > 20) and x.find("Trump") = -1 and \
-                        x.find("trump") = -1]
+                    if (len(x) <= 140) and (len(x) > 20) and 
+                    x.find("Trump") = -1 and x.find("trump") = -1]
     return np.random.choice(valid_tweets)
 
 def reply_to_specific_tweet(api,username,tweetId, text):
@@ -110,8 +111,9 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     Respond to a specific user's input by GPT-2 provided response
     """
     #Invoke GPT2 to formulate a reply
+    print("Start generation %s" % datetime.datetime.now())
     reply = gpt2.generate_batch_from_prompts(text)
-    print("reply %s" % reply)
+    print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
     print("cleaned first reply under 140 characters %s" %
           get_clean_tweet(reply))
     #WARNING
