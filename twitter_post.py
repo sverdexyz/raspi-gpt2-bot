@@ -100,13 +100,17 @@ def get_clean_tweet(generated_text):
     Split GPT2 outputs on separator and look for short tweets
     """
     # Parse out all "sentences" by splitting on "\n———————\n"
-    split_text = generated_text[0][0][0].split("\n").split("<|endoftext|>")
-    
+    [print(p+"\n") for p in generated_text]
+    #split_text = "".join(generated_text).split(["\n","<|endoftext|>"])[0]
+    #print(split_text)
     # Filter out all examples which are longer than 140 characters
-    valid_tweets = [x for x in split_text
-                    if (len(x) <= 140) and (len(x) > 20) and 
-                    x.find("Trump") == -1 and x.find("trump") == -1]
-    return np.random.choice(valid_tweets)
+    valid_tweets = [x for x in generated_text
+                    if (len(x) <= 280) and (len(x) > 20)]
+    print("valid_tweets_______",valid_tweets)
+    if valid_tweets:
+        return np.random.choice(valid_tweets)
+    else:
+        return np.random.choice(generated_text)[0:240]
 
 def reply_to_specific_tweet(api,username,tweetId, text):
     """
@@ -114,7 +118,7 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     """
     #Invoke GPT2 to formulate a reply
     print("Start generation %s, text %s" % (datetime.datetime.now(), text))
-    reply = gpt2.generate( text, interactive=False, n_samples=2, words=10, return_text=True)
+    reply = gpt2.generate_batch_from_prompts([text])
     print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
     print("cleaned first reply under 140 characters %s" %
           get_clean_tweet(reply))
