@@ -113,7 +113,7 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     Respond to a specific user's input by GPT-2 provided response
     """
     #Invoke GPT2 to formulate a reply
-    print("Start generation %s" % datetime.datetime.now())
+    print("Start generation %s, text %s" % (datetime.datetime.now(), text))
     reply = gpt2.generate_batch_from_prompts(text)
     print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
     print("cleaned first reply under 140 characters %s" %
