@@ -5,6 +5,7 @@ import json
 import time
 import numpy as np
 import datetime
+import random
 
 from twitter_auth import authenticate
 from itertools import cycle
@@ -80,7 +81,7 @@ def reply_indefinitely_to_users(api,filename):
     Cycle through a list of Twitter usernames and reply to their last tweet, indefinitely
     """
     file1 = open(filename, 'r')
-    userlist = file1.readlines()
+    userlist = random.shuffle(file1.readlines())
     for user in cycle(userlist):
         print(user)
         get_last_tweet_and_reply(api,user)
