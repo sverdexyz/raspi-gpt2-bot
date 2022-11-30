@@ -81,7 +81,8 @@ def reply_indefinitely_to_users(api,filename):
     Cycle through a list of Twitter usernames and reply to their last tweet, indefinitely
     """
     file1 = open(filename, 'r')
-    userlist = random.shuffle(file1.readlines())
+    userlist = file1.readlines()
+    random.shuffle(userlist)
     for user in cycle(userlist):
         print(user)
         get_last_tweet_and_reply(api,user)
