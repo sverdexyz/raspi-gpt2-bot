@@ -100,7 +100,7 @@ def get_clean_tweet(generated_text):
     Split GPT2 outputs on separator and look for short tweets
     """
     # Parse out all "sentences" by splitting on "\n———————\n"
-    split_text = generated_text.split("<|endoftext|>")[0].split("\n")
+    split_text = generated_text[0].split("\n").split("<|endoftext|>")
     
     # Filter out all examples which are longer than 140 characters
     valid_tweets = [x for x in split_text
