@@ -101,7 +101,8 @@ def get_clean_tweet(generated_text):
     
     # Filter out all examples which are longer than 140 characters
     valid_tweets = [x for x in split_text
-                    if (len(x) <= 140) and (len(x) > 20)]
+                    if (len(x) <= 140) and (len(x) > 20) and x.find("Trump") = -1 and \
+                        x.find("trump") = -1]
     return np.random.choice(valid_tweets)
 
 def reply_to_specific_tweet(api,username,tweetId, text):
