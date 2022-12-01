@@ -6,8 +6,11 @@ import time
 import numpy as np
 import datetime
 import random
+import datetime
+import random
 
 from twitter_auth import authenticate
+from itertools import cycle
 from itertools import cycle
 
 from gpt2_client import GPT2Client
@@ -85,7 +88,10 @@ def reply_indefinitely_to_users(api,filename):
     random.shuffle(userlist)
     for user in cycle(userlist):
         print(user)
-        get_last_tweet_and_reply(api,user)
+        try:
+            get_last_tweet_and_reply(api,user)
+        except:
+            print("User %s failed"% user)
 
 def get_last_tweet_and_reply(api,username):
     """
@@ -105,12 +111,12 @@ def get_clean_tweet(generated_text):
     #print(split_text)
     # Filter out all examples which are longer than 140 characters
     valid_tweets = [x for x in generated_text
-                    if (len(x) <= 280) and (len(x) > 20)]
+                    if (len(x) <= 200) and (len(x) > 20)]
     print("valid_tweets_______",valid_tweets)
     if valid_tweets:
         return np.random.choice(valid_tweets)
     else:
-        return np.random.choice(generated_text)[0:240]
+        return np.random.choice(generated_text)[0:200]
 
 def reply_to_specific_tweet(api,username,tweetId, text):
     """
@@ -126,7 +132,7 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     #update_status is live tweeting, do it too often or
     #tag famous people and you gonna get shutdown
     #WARNING
-    api.update_status("@%s %s" % (username, get_clean_tweet(reply)),
+    api.update_status( get_clean_tweet(reply),
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
         
