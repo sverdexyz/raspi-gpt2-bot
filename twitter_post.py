@@ -29,8 +29,8 @@ def reply_indefinitely_to_users(api,filename):
         print(user)
         try:
             get_last_tweet_and_reply(api,user)
-        except:
-            print("User %s failed"% user)
+        except Exception as e:
+            print("User %s failed, error %s"% (user, e))
 
 def get_last_tweet_and_reply(api,username):
     """
@@ -44,18 +44,11 @@ def get_clean_tweet(generated_text):
     """
     Split GPT2 outputs on separator and look for short tweets
     """
-    # Parse out all "sentences" by splitting on "\n———————\n"
-    [print(p+"\n") for p in generated_text]
-    #split_text = "".join(generated_text).split(["\n","<|endoftext|>"])[0]
-    #print(split_text)
-    # Filter out all examples which are longer than 140 characters
-    valid_tweets = [x for x in generated_text
-                    if (len(x) <= 200) and (len(x) > 20)]
-    print("valid_tweets_______",valid_tweets)
-    if valid_tweets:
-        return np.random.choice(valid_tweets)
-    else:
-        return np.random.choice(generated_text)[0:200]
+    # First two hundred characters of first entry to get a whole sentence. 
+    #Split on endoftext
+    firsttext = "".join(generated_text).split("<|endoftext|>")[0]
+    return np.random.choice("".join(firsttext).split("\n"))[:220]
+  
 
 def reply_to_specific_tweet(api,username,tweetId, text):
     """
