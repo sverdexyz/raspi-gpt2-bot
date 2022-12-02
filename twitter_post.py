@@ -58,13 +58,14 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     print("Start generation %s, text %s" % (datetime.datetime.now(), text))
     reply = gpt2.generate_batch_from_prompts([text])
     print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
+    clean_tweet =  get_clean_tweet(reply)
     print("cleaned first reply under 140 characters %s" %
-          get_clean_tweet(reply))
+         clean_tweet)
     #WARNING
     #update_status is live tweeting, do it too often or
     #tag famous people and you gonna get shutdown
     #WARNING
-    api.update_status( get_clean_tweet(reply).split("<|endoftext|>")[0],
+    api.update_status( get_clean_tweet(clean_tweet),
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
         
