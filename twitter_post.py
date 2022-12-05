@@ -46,8 +46,9 @@ def get_clean_tweet(generated_text):
     """
     # First two hundred characters of first entry to get a whole sentence. 
     #Split on endoftext
-    firsttext = "".join(generated_text).split("<|endoftext|>")[0]
-    return np.random.choice("".join(firsttext).split("\n"))[:220]
+    [print(p) for p in generated_text]
+    #firsttext = "".join(generated_text).split("<|endoftext|>")[0]
+    return np.random.choice("".join(generated_text).split("\n"))[:220]
   
 
 def reply_to_specific_tweet(api,username,tweetId, text):
