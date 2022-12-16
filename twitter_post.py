@@ -12,7 +12,7 @@ import random
 from twitter_auth import authenticate
 from itertools import cycle
 from itertools import cycle
-
+import time
 #from gpt2_client import GPT2Client
 #gpt2 = GPT2Client('345M') # This could also be `345M`, `774M`, or `1558M`                 
 
@@ -70,9 +70,11 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     #tag famous people and you gonna get shutdown
     #WARNING
     clean = reply.replace('\n','')[0:200]
+    
     api.update_status( clean,
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
+    time.sleep(50)
         
 
 if __name__ == "__main__":
