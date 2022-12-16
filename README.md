@@ -9,6 +9,11 @@ Raspberry Pi enabled GPT2 bot plugin for Wordpress and Twitter
 ## Get Twitter credentials
 https://developer.twitter.com/en/portal/products/elevated
 
+
+## Big Change to aigentext
+All references to tensorflow are being removed. tensorflow and gpt2 was replace with aigentext and 
+ai = aitextgen(model="EleutherAI/gpt-neo-125M") which proiduces tweets in 10 seconds instead of 25 mintues. 
+
 ## Install on Raspberry 4
 - Recommended to be ONLY run on a Raspberry Pi as the old version of Tensorflow
   is very insecure
