@@ -13,9 +13,11 @@ from twitter_auth import authenticate
 from itertools import cycle
 from itertools import cycle
 
-from gpt2_client import GPT2Client
-gpt2 = GPT2Client('345M') # This could also be `345M`, `774M`, or `1558M`                 
+#from gpt2_client import GPT2Client
+#gpt2 = GPT2Client('345M') # This could also be `345M`, `774M`, or `1558M`                 
 
+from aitextgen import aitextgen
+ai = aitextgen(model="EleutherAI/gpt-neo-125M")
 
 
 def reply_indefinitely_to_users(api,filename):
@@ -57,16 +59,17 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     """
     #Invoke GPT2 to formulate a reply
     print("Start generation %s, text %s" % (datetime.datetime.now(), text))
-    reply = gpt2.generate_batch_from_prompts([text])
+    #reply = gpt2.generate_batch_from_prompts([text])
+    reply = ai.generate_one(prompt=text, max_length=200, repetition_penalty=2.0)
     print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
-    clean_tweet =  get_clean_tweet(reply)
-    print("cleaned first reply under 140 characters %s" %
-         clean_tweet)
+    #clean_tweet =  get_clean_tweet(reply)
+    #print("cleaned first reply under 140 characters %s" %
+    #     clean_tweet)
     #WARNING
     #update_status is live tweeting, do it too often or
     #tag famous people and you gonna get shutdown
     #WARNING
-    api.update_status( get_clean_tweet(clean_tweet),
+    api.update_status( reply,
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
         
