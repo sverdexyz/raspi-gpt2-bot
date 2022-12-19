@@ -60,20 +60,25 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     #Invoke GPT2 to formulate a reply
     print("Start generation %s, text %s" % (datetime.datetime.now(), text))
     #reply = gpt2.generate_batch_from_prompts([text])
-    reply = ai.generate_one(prompt=text, max_length=200, repetition_penalty=2.0).replace(text,"")
-    print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
-    #clean_tweet =  get_clean_tweet(reply)
-    #print("cleaned first reply under 140 characters %s" %
-    #     clean_tweet)
-    #WARNING
-    #update_status is live tweeting, do it too often or
-    #tag famous people and you gonna get shutdown
-    #WARNING
-    clean = reply.replace('\n','')[0:200]
-    
+    #delete first line as it ususally has lot of preamble text
+    ascii_count=0
+    #filter out messages with too much non-ASCII, liek crappy code
+    while ascii_count < 260:
+        reply = ai.generate_one(prompt=text, max_length=500, repetition_penalty=2.0).replace(text,"").split("\n")[1:]
+        reply = " ".join(reply)
+        print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
+        #WARNING
+        #update_status is live tweeting, do it too often or
+        #tag famous people and you gonna get shutdown
+        #WARNING
+        clean = reply[0:270]
+        ascii_count = len(clean.encode("ascii", "ignore"))
+        print("ascii count %s ", ascii_count)
+    print("enough ASCII tweeting")
     api.update_status( clean,
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
+    print("Tweeted waiting")
     time.sleep(50)
         
 
