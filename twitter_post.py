@@ -62,6 +62,7 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     #reply = gpt2.generate_batch_from_prompts([text])
     #delete first line as it ususally has lot of preamble text
     ascii_count=0
+    counter = 0 
     #filter out messages with too much non-ASCII, liek crappy code
     while ascii_count < 260:
         reply = ai.generate_one(prompt=text, max_length=500, repetition_penalty=2.0).replace(text,"").split("\n")[1:]
@@ -74,6 +75,9 @@ def reply_to_specific_tweet(api,username,tweetId, text):
         clean = reply[0:270]
         ascii_count = len(clean.encode("ascii", "ignore"))
         print("ascii count %s ", ascii_count)
+        counter = counter+1
+        if counter > 10:
+            return
     print("enough ASCII tweeting")
     api.update_status( clean,
                       in_reply_to_status_id=tweetId,
