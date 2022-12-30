@@ -83,7 +83,7 @@ def reply_to_specific_tweet(api,username,tweetId, text):
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
     print("Tweeted waiting")
-    time.sleep(50)
+    time.sleep(300)
         
 
 if __name__ == "__main__":
