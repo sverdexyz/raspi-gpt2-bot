@@ -53,6 +53,10 @@ def get_clean_tweet(generated_text):
     return np.random.choice(firsttext)[:220]
   
 
+def wait_random_time():
+    wait_time = random.uniform(2 * 60, 5 * 60) # generate random number between 2 and 5 minutes in seconds
+    time.sleep(wait_time) # wait for the generated amount of time
+
 def reply_to_specific_tweet(api,username,tweetId, text):
     """
     Respond to a specific user's input by GPT-2 provided response
@@ -83,7 +87,7 @@ def reply_to_specific_tweet(api,username,tweetId, text):
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
     print("Tweeted waiting")
-    time.sleep(300)
+    wait_random_time()
         
 
 if __name__ == "__main__":
