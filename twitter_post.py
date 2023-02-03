@@ -76,8 +76,14 @@ def reply_to_specific_tweet(api,username,tweetId, text):
         #update_status is live tweeting, do it too often or
         #tag famous people and you gonna get shutdown
         #WARNING
-        clean = reply[0:270]
-        ascii_count = len(clean.encode("ascii", "ignore"))
+       # Split the reply into sentences
+        sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', reply)
+        clean = ""
+        for sentence in sentences:
+            clean += sentence + " "
+            ascii_count = len(clean.encode("ascii", "ignore"))
+            if ascii_count >= 260:
+                break
         print("ascii count %s ", ascii_count)
         counter = counter+1
         if counter > 10:
