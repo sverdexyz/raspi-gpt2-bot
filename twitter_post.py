@@ -8,6 +8,7 @@ import datetime
 import random
 import datetime
 import random
+import re
 
 from twitter_auth import authenticate
 from itertools import cycle
