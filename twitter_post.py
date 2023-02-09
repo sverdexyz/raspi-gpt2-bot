@@ -69,7 +69,8 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     ascii_count=0
     counter = 0 
     #filter out messages with too much non-ASCII, liek crappy code
-    while ascii_count < 260:
+    maxlen = 200
+    while ascii_count < maxlen:
         reply = ai.generate_one(prompt=text, max_length=500, repetition_penalty=2.0).replace(text,"").split("\n")[1:]
         reply = " ".join(reply)
         print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
@@ -83,14 +84,14 @@ def reply_to_specific_tweet(api,username,tweetId, text):
         for sentence in sentences:
             clean += sentence + " "
             ascii_count = len(clean.encode("ascii", "ignore"))
-            if ascii_count >= 200:
+            if ascii_count >= maxlen:
                 break
         print("ascii count %s ", ascii_count)
         counter = counter+1
         if counter > 10:
             return
     print("enough ASCII tweeting")
-    clean = clean + "!Visit the Sverde Launchpool https://otoco.io/launchpool/eth:755 "
+    clean = clean + " Sverde Launchpool https://otoco.io/launchpool/eth:755 "
     api.update_status( clean,
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
