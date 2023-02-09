@@ -91,7 +91,7 @@ def reply_to_specific_tweet(api,username,tweetId, text):
         if counter > 10:
             return
     print("enough ASCII tweeting")
-    clean = clean + " Sverde Launchpool https://otoco.io/launchpool/eth:755 "
+    clean = clean + "& Sverde Launchpool https://otoco.io/launchpool/eth:755 &"
     api.update_status( clean,
                       in_reply_to_status_id=tweetId,
                       auto_populate_reply_metadata=True)
