@@ -105,10 +105,10 @@ def reply_to_specific_tweet(api,username,tweetId, text):
             ascii_count = len(clean.encode("ascii", "ignore"))
             if ascii_count >= maxlen:
                 break
-        print("ascii count %s ", ascii_count)
-        counter = counter+1
-        if counter > 10:
-            return
+            print("ascii count %s ", ascii_count)
+            counter = counter+1
+            if counter > 10:
+                return
     print("enough ASCII tweeting")
     print(clean, len(clean))
     clean = clean + "& Sverde Launchpool https://otoco.io/launchpool/eth:755 &"
