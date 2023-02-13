@@ -90,7 +90,7 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     #filter out messages with too much non-ASCII, liek crappy code
     maxlen = 200
     while ascii_count < maxlen:
-        reply = ai.generate_one(prompt=text, max_length=500, repetition_penalty=2.0).replace(text,"").split("\n")[1:]
+        reply = ai.generate_one(prompt=text, max_length=200, repetition_penalty=2.0).replace(text,"").split("\n")[1:]
         reply = " ".join(reply)
         print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
         #WARNING
