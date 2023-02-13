@@ -9,6 +9,7 @@ import random
 import datetime
 import random
 import re
+from diffusers import DiffusionPipeline
 
 from twitter_auth import authenticate
 from itertools import cycle
@@ -58,6 +59,24 @@ def wait_random_time():
     wait_time = random.uniform(2 * 60, 5 * 60) # generate random number between 2 and 5 minutes in seconds
     time.sleep(wait_time) # wait for the generated amount of time
 
+
+def make_picture(prompt):
+    # !pip install diffusers["torch"] transformers
+
+    device = "cpu"
+    model_id = "CompVis/ldm-text2im-large-256"
+
+    # load model and scheduler
+    ldm = DiffusionPipeline.from_pretrained(model_id)
+    ldm = ldm.to(device)
+
+    # run pipeline in inference (sample random noise and denoise)
+    #prompt = "A painting of a squirrel eating a burger"
+    image = ldm([prompt], num_inference_steps=50, eta=0.3, guidance_scale=6).images[0]
+
+    # save image
+    image.save("squirrel.png")
+
 def reply_to_specific_tweet(api,username,tweetId, text):
     """
     Respond to a specific user's input by GPT-2 provided response
@@ -95,9 +114,15 @@ def reply_to_specific_tweet(api,username,tweetId, text):
     clean = clean + "& Sverde Launchpool https://otoco.io/launchpool/eth:755 &"
     print(clean, len(clean))
 
+    #upload image
+    make_picture(text)
+    media = api.media_upload(filename="./squirrel.png")
+    print("MEDIA: ", media)
+
     api.update_status( clean,
                       in_reply_to_status_id=tweetId,
-                      auto_populate_reply_metadata=True)
+                      auto_populate_reply_metadata=True, 
+                      media_ids=[media.media_id_string])
     print("Tweeted waiting")
     wait_random_time()
         
