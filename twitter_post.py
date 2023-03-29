@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import openai
 import tweepy
 import sys
 import json
@@ -9,7 +10,7 @@ import random
 import datetime
 import random
 import re
-from diffusers import DiffusionPipeline
+
 
 from twitter_auth import authenticate
 from itertools import cycle
@@ -18,8 +19,6 @@ import time
 #from gpt2_client import GPT2Client
 #gpt2 = GPT2Client('345M') # This could also be `345M`, `774M`, or `1558M`                 
 
-from aitextgen import aitextgen
-ai = aitextgen(model="EleutherAI/gpt-neo-125M")
 
 
 def reply_indefinitely_to_users(api,filename):
@@ -56,76 +55,62 @@ def get_clean_tweet(generated_text):
   
 
 def wait_random_time():
-    wait_time = random.uniform(2 * 60, 5 * 60) # generate random number between 2 and 5 minutes in seconds
+    wait_time = random.uniform(5 * 60, 10 * 60) # generate random number between 2 and 5 minutes in seconds
     time.sleep(wait_time) # wait for the generated amount of time
 
 
-def make_picture(prompt):
-    # !pip install diffusers["torch"] transformers
+import requests
+import json
+import datetime
 
-    device = "cpu"
-    model_id = "CompVis/ldm-text2im-large-256"
+# Read GPT-3 API key from a file
+with open("../gpt3_api_key.txt", "r") as key_file:
+    api_key = key_file.read().strip()
 
-    # load model and scheduler
-    ldm = DiffusionPipeline.from_pretrained(model_id)
-    ldm = ldm.to(device)
-
-    # run pipeline in inference (sample random noise and denoise)
-    #prompt = "A painting of a squirrel eating a burger"
-    image = ldm([prompt], num_inference_steps=50, eta=0.3, guidance_scale=6).images[0]
-
-    # save image
-    image.save("squirrel.png")
-
-def reply_to_specific_tweet(api,username,tweetId, text):
+def reply_to_specific_tweet(api, username, tweetId, text):
     """
-    Respond to a specific user's input by GPT-2 provided response
+    Respond to a specific user's input by GPT-3.5-turbo provided response
     """
-    #Invoke GPT2 to formulate a reply
+    # Invoke GPT-3.5-turbo to formulate a reply
     print("Start generation %s, text %s" % (datetime.datetime.now(), text))
-    #reply = gpt2.generate_batch_from_prompts([text])
-    #delete first line as it ususally has lot of preamble text
-    ascii_count=0
-    counter = 0 
-    #filter out messages with too much non-ASCII, liek crappy code
-    maxlen = 200
-    while ascii_count < maxlen:
-        reply = ai.generate_one(prompt=text, max_length=200, repetition_penalty=2.0).replace(text,"").split("\n")[1:]
-        reply = " ".join(reply)
-        print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
-        #WARNING
-        #update_status is live tweeting, do it too often or
-        #tag famous people and you gonna get shutdown
-        #WARNING
-       # Split the reply into sentences
-        sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', reply)
-        clean = ""
-        for sentence in sentences:
-            clean += sentence + " "
-            ascii_count = len(clean.encode("ascii", "ignore"))
-            if ascii_count >= maxlen:
-                break
-            print("ascii count %s ", ascii_count)
-            counter = counter+1
-            if counter > 10:
-                return
-    print("enough ASCII tweeting")
-    print(clean, len(clean))
-    clean = clean + "& Sverde Launchpool https://otoco.io/launchpool/eth:755 &"
-    print(clean, len(clean))
 
-    #upload image
-    make_picture(text)
-    media = api.media_upload(filename="./squirrel.png")
-    print("MEDIA: ", media)
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    chat_messages = [
+        #{"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": text + ". In your response make sure, you DO NOT refer to yourself as an AI \
+        generative model or language model. Furthermore make sure response is SHORTER than 240 characters. "}
+    ]
+ 
 
-    api.update_status( clean,
+    data = {
+        "model": "gpt-3.5-turbo",
+        "messages": chat_messages,
+        "max_tokens": 200,
+        "n": 1,
+        "stop": None,
+        "temperature": 0.8,
+        "top_p": 1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+    }
+
+    response = requests.post("https://api.openai.com/v1/chat/completions",
+                          headers=headers, data=json.dumps(data))
+    response_json = response.json()
+    print(response_json)
+    reply = response_json["choices"][0]["message"]["content"].strip().replace(text, "")
+    print("end generation %s, reply %s" % (datetime.datetime.now(), reply))
+
+
+  # Update status without uploading an image
+    api.update_status(reply,
                       in_reply_to_status_id=tweetId,
-                      auto_populate_reply_metadata=True, 
-                      media_ids=[media.media_id_string])
+                      auto_populate_reply_metadata=True)
     print("Tweeted waiting")
     wait_random_time()
-        
 
 if __name__ == "__main__":
     """
