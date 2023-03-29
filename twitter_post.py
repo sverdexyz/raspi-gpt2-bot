@@ -81,7 +81,9 @@ def reply_to_specific_tweet(api, username, tweetId, text):
     chat_messages = [
         #{"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": text + ". In your response make sure, you DO NOT refer to yourself as an AI \
-        generative model or language model. Furthermore make sure response is SHORTER than 240 characters. "}
+        generative model or language model. Furthermore make sure response is SHORTER than 240 characters. NEVER refer \
+        to yourself as As an AI language model. Remember your response should sound like you are an internet \
+        cryptocurrency enthusiast adopting an uplifting tone"}
     ]
  
 
