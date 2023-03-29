@@ -4,4 +4,4 @@ tqdm==4.31.1
 
 requests==2.27.1
 tweepy==3.7.0
-protobuf==3.7.0
+protobuf==3.18.3
